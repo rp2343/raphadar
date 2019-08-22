@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: valaxy-deployment
+  labels:
+    app: valaxy
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: valaxy
+  template:
+    metadata:
+      labels:
+        app: valaxy
+    spec:
+      containers:
+      - name: valaxy
+        image: rp2343/valaxy_demo
+        ports:
+        - containerPort: 8080
