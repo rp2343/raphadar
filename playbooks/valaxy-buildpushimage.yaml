@@ -1,0 +1,14 @@
+---
+
+- hosts: localhost
+  connection: local
+
+  tasks:
+  - name: Build an image and push it to docker hub
+    docker_image:
+      build:
+        path: /opt/docker
+      name: rp2343/valaxy_demo
+      tag: latest
+      push: yes
+      source: build
