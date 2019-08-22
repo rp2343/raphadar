@@ -1,0 +1,55 @@
+---
+
+- hosts: localhost
+  connection: local
+
+  tasks:
+  - name: Create a k8s namespace
+    k8s:
+      name: default
+      api_version: v1
+      kind: Namespace
+      state: present
+
+  - name: Create a Service object from an inline definition
+    k8s:
+      state: present
+      definition:
+        apiVersion: v1
+        kind: Service
+        metadata:
+          name: valaxy-demo
+          namespace: default
+        spec:
+          selector:
+            app: valaxy
+          ports:
+          - protocol: "TCP"
+            port: 8090
+            targetPort: 8080
+          type: LoadBalancer
+  - name: Create a POD object from an inline definition
+    k8s:
+      state: present
+      definition:
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: valaxy-deployment
+          namespace: default
+        spec:
+          replicas: 3
+          selector:
+            matchLabels:
+              app: valaxy
+          template:
+            metadata:
+              labels:
+                app: valaxy
+            spec:
+              containers:
+              - name: valaxy
+                image: rp2343/valaxy_demo
+                ports:
+                - containerPort: 8080
+
